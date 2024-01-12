@@ -29,14 +29,14 @@ def prediction(img):#create prediction function with a parameter 'img'
     return predict
 
 #display bounding boxes after predict
-def create_image_with_boxes(img, predict): #create function create_image_with_boxes with parameter img, predict
+def create_bound_box(img, predict): #create function create_bound_box with parameter img, predict
     img_tensor = torch.tensor(img)#converts the img to PyTorch tensor.
     #the actual box
     img_with_boxes = draw_bounding_boxes(img_tensor, boxes=predict["boxes"], labels=predict["labels"],
                                          colors=["red" if label == "person" else "green" for label in predict["labels"]],
                                          width=4)  # Increase the width of the bounding boxes for better visibility
-    create_image_with_boxes_np = img_with_boxes.detach().numpy().transpose(1, 2, 0)#extracts the img with bounding boxes from the converted PyTorch img and converts it back to Numpy array. the numbers represent the dimensions and rearrange it for img visualization purposes i.e PyTorch to standard img
-    return create_image_with_boxes_np
+    create_bound_box_np = img_with_boxes.detach().numpy().transpose(1, 2, 0)#extracts the img with bounding boxes from the converted PyTorch img and converts it back to Numpy array. the numbers represent the dimensions and rearrange it for img visualization purposes i.e PyTorch to standard img
+    return create_bound_box_np
 
 
 
@@ -61,7 +61,7 @@ upload = st.file_uploader(label="", type=["png", "jpg", "jpeg"])
 if upload:
     img = Image.open(upload)
     predict = prediction(img) #calls the prediction function with the parameter img
-    img_with_box = create_image_with_boxes(np.array(img).transpose(2, 0, 1), predict)#calls create_image_with_boxes with various parameters in it
+    img_with_box = create_bound_box(np.array(img).transpose(2, 0, 1), predict)#calls create_bound_box with various parameters in it
     st.image(img, caption='Uploaded Image', use_column_width=True)
 
     st.write("") #empty space for layout adjustment
